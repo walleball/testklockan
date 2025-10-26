@@ -1,6 +1,7 @@
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.Time;
+import Toybox.Graphics;
 
 class SwedishTimeFormatter {
 
@@ -22,6 +23,31 @@ class SwedishTimeFormatter {
         var info = Time.Gregorian.info(now, Time.FORMAT_SHORT);
         
         return getTimeStrings(clockTime, info);
+    }
+    
+    // Get battery level information for display
+    static function getBatteryInfo() as Lang.Dictionary {
+        var stats = System.getSystemStats();
+        var battery = stats.battery;
+        
+        var color = Graphics.COLOR_GREEN;
+        
+        if (battery <= 10) {
+            color = Graphics.COLOR_RED;
+        } else if (battery <= 25) {
+            color = Graphics.COLOR_RED;
+        } else if (battery <= 50) {
+            color = Graphics.COLOR_YELLOW;
+        } else if (battery <= 75) {
+            color = Graphics.COLOR_GREEN;
+        } else {
+            color = Graphics.COLOR_GREEN;
+        }
+        
+        return {
+            "color" => color,
+            "percentage" => battery
+        };
     }
     
     static function getEventStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info) as Lang.Dictionary {

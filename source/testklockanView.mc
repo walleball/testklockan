@@ -38,6 +38,9 @@ class testklockanView extends WatchUi.WatchFace {
         
         // Draw the lines centered on screen
         drawCenteredLines(dc, lines, font);
+        
+        // Draw battery indicator
+        drawBatteryIndicator(dc);
     }
 
     // Choose the largest font that fits all lines
@@ -105,6 +108,40 @@ class testklockanView extends WatchUi.WatchFace {
 
     // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() as Void {
+    }
+
+    // Draw battery level indicator at bottom center
+    function drawBatteryIndicator(dc as Graphics.Dc) as Void {
+        var batteryInfo = SwedishTimeFormatter.getBatteryInfo();
+        var color = batteryInfo.get("color") as Graphics.ColorType;
+        var percentage = batteryInfo.get("percentage") as Lang.Float;
+        
+        var screenW = dc.getWidth();
+        var screenH = dc.getHeight();
+        var bottomMargin = 25;
+        
+        // Draw custom battery shape using rectangles
+        var centerX = screenW / 2;
+        var batteryY = screenH - bottomMargin - 10;
+        
+        // Battery dimensions
+        var batteryWidth = 20;
+        var batteryHeight = 8;
+        var batteryX = centerX - (batteryWidth / 2);
+        
+        // Draw battery outline (white border)
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(batteryX, batteryY, batteryWidth, batteryHeight);
+        
+        // Draw battery tip (small rectangle on the right)
+        dc.fillRectangle(batteryX + batteryWidth, batteryY + 2, 2, 4);
+        
+        // Draw battery fill based on percentage
+        var fillWidth = ((batteryWidth - 2) * percentage / 100).toNumber();
+        if (fillWidth > 0) {
+            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(batteryX + 1, batteryY + 1, fillWidth, batteryHeight - 2);
+        }
     }
 
 }
