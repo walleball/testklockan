@@ -31,29 +31,13 @@ class testklockanView extends WatchUi.WatchFace {
         var clockTime = System.getClockTime();
         
         // Build text lines based on time
-        var lines = buildLines(clockTime);
+        var lines = SwedishTimeFormatter.buildLines(clockTime);
         
         // Choose the best font size
         var font = chooseFontSize(dc, lines);
         
         // Draw the lines centered on screen
         drawCenteredLines(dc, lines, font);
-    }
-
-    // Generate text lines based on time
-    function buildLines(clockTime) as Lang.Array<Lang.String> {
-        var hour = clockTime.hour;
-        var min = clockTime.min;
-
-        if (min == 0) {
-            return ["Klockan", Lang.format("$1$", [hour])];
-        } else if (min < 10) {
-            return ["Klockan", Lang.format("$1$", [hour]), "och", Lang.format("$1$", [min])];
-        } else if (min < 30) {
-            return ["Klockan", Lang.format("$1$", [hour]), "och", Lang.format("$1$", [min])];
-        } else {
-            return ["Klockan", Lang.format("$1$:$2$", [hour, min.format("%02d")])];
-        }
     }
 
     // Choose the largest font that fits all lines
