@@ -1,0 +1,4 @@
+<layout id="WatchFace">
+    <!-- Simple single label layout as fallback -->
+    <label id="TimeLabel" x="center" y="center" font="Graphics.FONT_LARGE" justification="Graphics.TEXT_JUSTIFY_CENTER" color="Graphics.COLOR_WHITE" />
+</layout>
