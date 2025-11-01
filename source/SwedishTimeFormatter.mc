@@ -232,8 +232,13 @@ class SwedishTimeFormatter {
                 lines.add("LITE");
                 lines.add("ÖVER");
             }
-        }
-        
+        } else {
+            if (minutes == 1) {
+                lines.add("NYSS");
+            } else if (minutes == 2) {
+                lines.add("EFTER");
+            }
+        }        
         // Combine all lines
         for (var i = 0; i < minuteLines.size(); i++) {
             lines.add(minuteLines[i]);
