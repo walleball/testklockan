@@ -1,0 +1,9 @@
+{
+   "TextColor": 0,
+   "ShowBattery": false,
+   "ShowMinus2Min": true,
+   "ShowMinus1Min": true,
+   "Show0Min": true,
+   "ShowPlus1Min": false,
+   "ShowPlus2Min": false
+}

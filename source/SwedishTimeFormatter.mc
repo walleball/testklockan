@@ -22,7 +22,15 @@ class SwedishTimeFormatter {
         var now = Time.now();
         var info = Time.Gregorian.info(now, Time.FORMAT_SHORT);
         
-        return getTimeStrings(clockTime, info);
+        return getTimeStrings(clockTime, info, null);
+    }
+    
+    // Generate Swedish text lines based on time with settings
+    static function buildLinesWithSettings(clockTime as System.ClockTime, settings as Lang.Dictionary) as Lang.Array<Lang.String> {
+        var now = Time.now();
+        var info = Time.Gregorian.info(now, Time.FORMAT_SHORT);
+        
+        return getTimeStrings(clockTime, info, settings);
     }
     
     // Get battery level information for display
@@ -197,7 +205,7 @@ class SwedishTimeFormatter {
         };
     }
     
-    static function getTimeStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info) as Lang.Array<Lang.String> {
+    static function getTimeStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, settings as Lang.Dictionary?) as Lang.Array<Lang.String> {
         var hour = clockTime.hour;
         
         var hourStrings = getHourStrings(clockTime, info);
@@ -216,26 +224,33 @@ class SwedishTimeFormatter {
         
         var lines = [] as Lang.Array<Lang.String>;
         
-        if (minutes == -2) {
+        // Apply settings filters for minute-specific text
+        var showMinus2 = settings == null ? true : (settings.get("ShowMinus2Min") as Lang.Boolean);
+        var showMinus1 = settings == null ? true : (settings.get("ShowMinus1Min") as Lang.Boolean);
+        var show0 = settings == null ? true : (settings.get("Show0Min") as Lang.Boolean);
+        var showPlus1 = settings == null ? true : (settings.get("ShowPlus1Min") as Lang.Boolean);
+        var showPlus2 = settings == null ? true : (settings.get("ShowPlus2Min") as Lang.Boolean);
+        
+        if (minutes == -2 && showMinus2) {
             lines.add("SNART");
-        } else if (minutes == -1) {
+        } else if (minutes == -1 && showMinus1) {
             lines.add("STRAX");
         }
         
         if (minuteLines.size() == 0) {
-            if (minutes == 0) {
+            if (minutes == 0 && show0) {
                 lines.add("PRICK");
-            } else if (minutes == 1) {
+            } else if (minutes == 1 && showPlus1) {
                 lines.add("STRAX");
                 lines.add("ÖVER");
-            } else if (minutes == 2) {
+            } else if (minutes == 2 && showPlus2) {
                 lines.add("LITE");
                 lines.add("ÖVER");
             }
         } else {
-            if (minutes == 1) {
+            if (minutes == 1 && showPlus1) {
                 lines.add("NYSS");
-            } else if (minutes == 2) {
+            } else if (minutes == 2 && showPlus2) {
                 lines.add("EFTER");
             }
         }        

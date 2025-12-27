@@ -2,6 +2,7 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
+import Toybox.Application;
 using Toybox.WatchUi as Ui;
 
 class testklockanView extends WatchUi.WatchFace {
@@ -27,20 +28,50 @@ class testklockanView extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
         
-        // Get and show the current time in Swedish format
+        // Get current time
         var clockTime = System.getClockTime();
         
-        // Build text lines based on time
-        var lines = SwedishTimeFormatter.buildLines(clockTime);
+        // Read settings
+        var app = Application.getApp();
+        var settings = {
+            "ShowMinus2Min" => getPropertyValue(app, "ShowMinus2Min", true),
+            "ShowMinus1Min" => getPropertyValue(app, "ShowMinus1Min", true),
+            "Show0Min" => getPropertyValue(app, "Show0Min", true),
+            "ShowPlus1Min" => getPropertyValue(app, "ShowPlus1Min", true),
+            "ShowPlus2Min" => getPropertyValue(app, "ShowPlus2Min", true)
+        };
+        
+        // Build text lines based on time and settings
+        var lines = SwedishTimeFormatter.buildLinesWithSettings(clockTime, settings);
         
         // Choose the best font size
         var font = chooseFontSize(dc, lines);
         
+        // Get text color from settings
+        var textColor = getTextColor();
+        
         // Draw the lines centered on screen
+        dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
         drawCenteredLines(dc, lines, font);
         
-        // Draw battery indicator
-        drawBatteryIndicator(dc);
+        // Draw battery indicator if enabled
+        var showBattery = getPropertyValue(app, "ShowBattery", false);
+        if (showBattery) {
+            drawBatteryIndicator(dc);
+        }
+    }
+    
+    // Helper to get property value with default
+    function getPropertyValue(app as Application.AppBase, key as Lang.String, defaultValue as Lang.Boolean) as Lang.Boolean {
+        try {
+            var value = app.getProperty(key);
+            if (value != null && value instanceof Lang.Boolean) {
+                return value as Lang.Boolean;
+            }
+        } catch (e) {
+            // Property read failed, use default
+        }
+        return defaultValue;
     }
 
     // Choose the largest font that fits all lines
@@ -79,8 +110,6 @@ class testklockanView extends WatchUi.WatchFace {
 
     // Draw lines centered vertically and horizontally
     function drawCenteredLines(dc as Graphics.Dc, lines as Lang.Array<Lang.String>, font as Graphics.FontType) as Void {
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        
         var screenW = dc.getWidth();
         var screenH = dc.getHeight();
         var fontH = dc.getFontHeight(font);
@@ -142,6 +171,31 @@ class testklockanView extends WatchUi.WatchFace {
             dc.setColor(color, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(batteryX + 1, batteryY + 1, fillWidth, batteryHeight - 2);
         }
+    }
+
+    // Get text color from settings
+    function getTextColor() as Graphics.ColorValue {
+        try {
+            var app = Application.getApp();
+            var colorValue = app.getProperty("TextColor");
+            
+            // Debug: Always try to read the value
+            if (colorValue != null && colorValue instanceof Lang.Number) {
+                var colorNum = colorValue as Lang.Number;
+                if (colorNum == 1) { return Graphics.COLOR_LT_GRAY; }
+                if (colorNum == 2) { return Graphics.COLOR_RED; }
+                if (colorNum == 3) { return Graphics.COLOR_BLUE; }
+                if (colorNum == 4) { return Graphics.COLOR_GREEN; }
+                if (colorNum == 5) { return Graphics.COLOR_YELLOW; }
+                if (colorNum == 6) { return Graphics.COLOR_ORANGE; }
+                if (colorNum == 7) { return Graphics.COLOR_PURPLE; }
+            }
+        } catch (e) {
+            // If properties fail, return red to show something is wrong
+            return Graphics.COLOR_RED;
+        }
+        
+        return Graphics.COLOR_WHITE;
     }
 
 }

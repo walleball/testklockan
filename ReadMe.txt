@@ -1,3 +1,5 @@
+https://developer.garmin.com/connect-iq/connect-iq-basics/your-first-app/
+
 Launch the Connect IQ SDK Manager
 "C:\Utils\connectiq-sdk-manager-windows\sdkmanager.exe"
 
