@@ -148,8 +148,10 @@ class SwedishTimeFormatter {
             lines.add(HOURS[(hour + 1) % 12]);
             minutes = minute - 60;
         } else if (minute >= 23) {
-            lines.add("HALV");
-            lines.add(HOURS[(hour + 1) % 12]);
+            var hourString = "HALV " + HOURS[(hour + 1) % 12];
+            lines.add(hourString);
+            // lines.add("HALV");
+            // lines.add(HOURS[(hour + 1) % 12]);
             minutes = minute - 30;
         } else {
             lines.add(HOURS[hour % 12]);
@@ -182,20 +184,16 @@ class SwedishTimeFormatter {
             // lines remains empty
             minute = minutes;
         } else if (minutes <= 7) {
-            lines.add("FEM");
-            lines.add("ÖVER");
+            lines.add("FEM ÖVER");
             minute = minutes - 5;
         } else if (minutes <= 12) {
-            lines.add("TIO");
-            lines.add("ÖVER");
+            lines.add("TIO ÖVER");
             minute = minutes - 10;
         } else if (minutes <= 17) {
-            lines.add("KVART");
-            lines.add("ÖVER");
+            lines.add("KVART ÖVER");
             minute = minutes - 15;
         } else {
-            lines.add("TJUGO");
-            lines.add("ÖVER");
+            lines.add("TJUGO ÖVER");
             minute = minutes - 20;
         }
         
@@ -239,19 +237,40 @@ class SwedishTimeFormatter {
         
         if (minuteLines.size() == 0) {
             if (minutes == 0 && show0) {
-                lines.add("PRICK");
+                if (hourLines[0].equals("HALV")) {
+                    lines.add("EXAKT");
+                } else {
+                    lines.add("PRICK");
+                }
             } else if (minutes == 1 && showPlus1) {
-                lines.add("STRAX");
-                lines.add("ÖVER");
+                lines.add("STRAX ÖVER");
             } else if (minutes == 2 && showPlus2) {
-                lines.add("LITE");
-                lines.add("ÖVER");
+                lines.add("LITE ÖVER");
             }
         } else {
+            var over = false;
+            if (minuteLines.size() == 1 && minuteLines[0].length() >= 4 && 
+                minuteLines[0].substring(minuteLines[0].length() - 5, minuteLines[0].length()).equals(" ÖVER")) {
+                over = true;
+            } else if (minuteLines.size() > 1 && minuteLines[minuteLines.size() - 1].equals("ÖVER")) {
+                over = true;
+            }
+
             if (minutes == 1 && showPlus1) {
-                lines.add("NYSS");
+                if (over) {
+                    lines.add("LITE MER ÄN");
+                }
+                else {
+                    lines.add("LITE MINDRE ÄN");
+                }
             } else if (minutes == 2 && showPlus2) {
-                lines.add("EFTER");
+                // if minuteLines[0] ends with ÖVER, change to LITE ÖVER
+                if (over) {
+                    lines.add("MER ÄN");
+                }
+                else {
+                    lines.add("MINDRE ÄN");
+                }
             }
         }        
         // Combine all lines

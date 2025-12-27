@@ -4,11 +4,11 @@
     <!-- Settings titles -->
     <string id="TextColorTitle">Textfärg</string>
     <string id="ShowBatteryTitle">Visa batteri</string>
-    <string id="ShowMinus2MinTitle">Visa (-2 min) info</string>
-    <string id="ShowMinus1MinTitle">Visa (-1 min) info</string>
-    <string id="Show0MinTitle">Visa (0 min) info</string>
-    <string id="ShowPlus1MinTitle">Visa (+1 min) info</string>
-    <string id="ShowPlus2MinTitle">Visa (+2 min) info</string>
+    <string id="ShowMinus2MinTitle">Visa -2 min</string>
+    <string id="ShowMinus1MinTitle">Visa -1 min</string>
+    <string id="Show0MinTitle">Visa 0 min</string>
+    <string id="ShowPlus1MinTitle">Visa +1 min</string>
+    <string id="ShowPlus2MinTitle">Visa +2 min</string>
     
     <!-- Color options -->
     <string id="ColorWhite">Vit</string>

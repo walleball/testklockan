@@ -1,5 +1,1 @@
 Show steps as a progress circle?
-
-Mindre än 20 i tolv
-EXAKT vid halvtimmar
-NYLIGEN istället för EFTER

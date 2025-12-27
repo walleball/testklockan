@@ -111,11 +111,11 @@ class testklockanView extends WatchUi.WatchFace {
     function drawCenteredLines(dc as Graphics.Dc, lines as Lang.Array<Lang.String>, font as Graphics.FontType) as Void {
         var screenW = dc.getWidth();
         var screenH = dc.getHeight();
-        var fontH = dc.getFontHeight(font);
+        var fontH = dc.getFontHeight(font) + 0; // allow for dots
         
         // Calculate total height and starting Y position
         var totalH = lines.size() * fontH;
-        var startY = (screenH - totalH) / 2;
+        var startY = (screenH - totalH) / 2 + 4; // slight adjustment
         
         // Draw each line
         for (var i = 0; i < lines.size(); i++) {
