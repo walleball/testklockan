@@ -258,10 +258,10 @@ class SwedishTimeFormatter {
 
             if (minutes == 1 && showPlus1) {
                 if (over) {
-                    lines.add("LITE MER ÄN");
+                    lines.add("NYSS");
                 }
                 else {
-                    lines.add("LITE MINDRE ÄN");
+                    lines.add("NYSS");
                 }
             } else if (minutes == 2 && showPlus2) {
                 // if minuteLines[0] ends with ÖVER, change to LITE ÖVER
