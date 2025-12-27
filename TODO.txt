@@ -1,17 +1,5 @@
-I want to add settings to the watchface:
-Text color
-Show/hide the battery icon
-Show/hide -2 min info
-Show/hide -1 min info
-Show/hide 0 min info
-Show/hide +1 min info
-Show/hide +2 min info
-
-
-
 Show steps as a progress circle?
 
-Ändra färg från black till lt_gray
 Mindre än 20 i tolv
 EXAKT vid halvtimmar
 NYLIGEN istället för EFTER

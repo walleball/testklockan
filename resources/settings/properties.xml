@@ -1,8 +1,8 @@
 <properties>
     <property id="TextColor" type="number">0</property>
     <property id="ShowBattery" type="boolean">false</property>
-    <property id="ShowMinus2Min" type="boolean">true</property>
-    <property id="ShowMinus1Min" type="boolean">true</property>
+    <property id="ShowMinus2Min" type="boolean">false</property>
+    <property id="ShowMinus1Min" type="boolean">false</property>
     <property id="Show0Min" type="boolean">true</property>
     <property id="ShowPlus1Min" type="boolean">false</property>
     <property id="ShowPlus2Min" type="boolean">false</property>
