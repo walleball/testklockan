@@ -32,13 +32,12 @@ class testklockanView extends WatchUi.WatchFace {
         var clockTime = System.getClockTime();
         
         // Read settings
-        var app = Application.getApp();
         var settings = {
-            "ShowMinus2Min" => getPropertyValue(app, "ShowMinus2Min", true),
-            "ShowMinus1Min" => getPropertyValue(app, "ShowMinus1Min", true),
-            "Show0Min" => getPropertyValue(app, "Show0Min", true),
-            "ShowPlus1Min" => getPropertyValue(app, "ShowPlus1Min", true),
-            "ShowPlus2Min" => getPropertyValue(app, "ShowPlus2Min", true)
+            "ShowMinus2Min" => getPropertyValue("ShowMinus2Min", true),
+            "ShowMinus1Min" => getPropertyValue("ShowMinus1Min", true),
+            "Show0Min" => getPropertyValue("Show0Min", true),
+            "ShowPlus1Min" => getPropertyValue("ShowPlus1Min", true),
+            "ShowPlus2Min" => getPropertyValue("ShowPlus2Min", true)
         };
         
         // Build text lines based on time and settings
@@ -55,16 +54,16 @@ class testklockanView extends WatchUi.WatchFace {
         drawCenteredLines(dc, lines, font);
         
         // Draw battery indicator if enabled
-        var showBattery = getPropertyValue(app, "ShowBattery", false);
+        var showBattery = getPropertyValue("ShowBattery", false);
         if (showBattery) {
             drawBatteryIndicator(dc);
         }
     }
     
     // Helper to get property value with default
-    function getPropertyValue(app as Application.AppBase, key as Lang.String, defaultValue as Lang.Boolean) as Lang.Boolean {
+    function getPropertyValue(key as Lang.String, defaultValue as Lang.Boolean) as Lang.Boolean {
         try {
-            var value = app.getProperty(key);
+            var value = Application.Properties.getValue(key);
             if (value != null && value instanceof Lang.Boolean) {
                 return value as Lang.Boolean;
             }
@@ -176,10 +175,8 @@ class testklockanView extends WatchUi.WatchFace {
     // Get text color from settings
     function getTextColor() as Graphics.ColorValue {
         try {
-            var app = Application.getApp();
-            var colorValue = app.getProperty("TextColor");
+            var colorValue = Application.Properties.getValue("TextColor");
             
-            // Debug: Always try to read the value
             if (colorValue != null && colorValue instanceof Lang.Number) {
                 var colorNum = colorValue as Lang.Number;
                 if (colorNum == 1) { return Graphics.COLOR_LT_GRAY; }
@@ -191,8 +188,7 @@ class testklockanView extends WatchUi.WatchFace {
                 if (colorNum == 7) { return Graphics.COLOR_PURPLE; }
             }
         } catch (e) {
-            // If properties fail, return red to show something is wrong
-            return Graphics.COLOR_RED;
+            // If properties fail, use default white
         }
         
         return Graphics.COLOR_WHITE;
