@@ -1,1 +1,2 @@
 Show steps as a progress circle?
+Show time up to 30 seconds before.

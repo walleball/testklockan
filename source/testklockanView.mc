@@ -41,7 +41,7 @@ class testklockanView extends WatchUi.WatchFace {
         };
         
         // Build text lines based on time and settings
-        var lines = SwedishTimeFormatter.buildLinesWithSettings(clockTime, settings);
+        var lines = SwedishTimeFormatter.buildLines(clockTime, settings);
         
         // Choose the best font size
         var font = chooseFontSize(dc, lines);

@@ -3,12 +3,12 @@
     
     <!-- Settings titles -->
     <string id="TextColorTitle">Textfärg</string>
-    <string id="ShowBatteryTitle">Visa batteri</string>
-    <string id="ShowMinus2MinTitle">Visa -2 min</string>
-    <string id="ShowMinus1MinTitle">Visa -1 min</string>
-    <string id="Show0MinTitle">Visa 0 min</string>
-    <string id="ShowPlus1MinTitle">Visa +1 min</string>
-    <string id="ShowPlus2MinTitle">Visa +2 min</string>
+    <string id="ShowBatteryTitle">Batteri</string>
+    <string id="ShowMinus2MinTitle">SNART (-2 min)</string>
+    <string id="ShowMinus1MinTitle">STRAX (-1 min)</string>
+    <string id="Show0MinTitle">PRICK/EXAKT</string>
+    <string id="ShowPlus1MinTitle">NYSS (+1 min)</string>
+    <string id="ShowPlus2MinTitle">ÖVER (+2 min)</string>
     
     <!-- Color options -->
     <string id="ColorWhite">Vit</string>

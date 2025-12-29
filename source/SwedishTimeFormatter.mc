@@ -17,20 +17,68 @@ class SwedishTimeFormatter {
     // Hour names in Swedish
     static const HOURS = ["TOLV", "ETT", "TVÅ", "TRE", "FYRA", "FEM", "SEX", "SJU", "ÅTTA", "NIO", "TIO", "ELVA"];
 
-    // Generate Swedish text lines based on time
-    static function buildLines(clockTime as System.ClockTime) as Lang.Array<Lang.String> {
-        var now = Time.now();
-        var info = Time.Gregorian.info(now, Time.FORMAT_SHORT);
-        
-        return getTimeStrings(clockTime, info, null);
-    }
-    
     // Generate Swedish text lines based on time with settings
-    static function buildLinesWithSettings(clockTime as System.ClockTime, settings as Lang.Dictionary) as Lang.Array<Lang.String> {
+    static function buildLines(clockTime as System.ClockTime, settings as Lang.Dictionary) as Lang.Array<Lang.String> {
         var now = Time.now();
         var info = Time.Gregorian.info(now, Time.FORMAT_SHORT);
         
-        return getTimeStrings(clockTime, info, settings);
+        var lines = getTimeStrings(clockTime, info, settings);
+        return adjustLines(lines);
+    }
+
+    // Helper function to split string by spaces
+    static function splitBySpace(str as Lang.String) as Lang.Array<Lang.String> {
+        var result = [] as Lang.Array<Lang.String>;
+        var word = "";
+        for (var i = 0; i < str.length(); i++) {
+            var c = str.substring(i, i + 1);
+            if (c.equals(" ")) {
+                if (word.length() > 0) {
+                    result.add(word);
+                    word = "";
+                }
+            } else {
+                word += c;
+            }
+        }
+        if (word.length() > 0) {
+            result.add(word);
+        }
+        return result;
+    }
+
+    // Adjust lines to fit display constraints if needed
+    static function adjustLines(lines as Lang.Array<Lang.String>) as Lang.Array<Lang.String> {
+        // Split all lines into individual words
+        var words = [] as Lang.Array<Lang.String>;
+        for (var i = 0; i < lines.size(); i++) {
+            var lineWords = splitBySpace(lines[i]);
+            for (var j = 0; j < lineWords.size(); j++) {
+                words.add(lineWords[j]);
+            }
+        }
+        
+        // If 4 or fewer words, we're done
+        if (words.size() <= 3) {
+            return words;
+        }
+        
+        // Try to reduce line count by merging "I" with previous word
+        var result = [] as Lang.Array<Lang.String>;
+        for (var i = 0; i < words.size(); i++) {
+            if (words[i].equals("I") && result.size() > 0) {
+                // Merge "I" with previous word
+                result[result.size() - 1] = result[result.size() - 1] + " I";
+            } else {
+                result.add(words[i]);
+            }
+        }
+
+        if (result.size() <= 5) {
+            return result;
+        }
+        
+        return lines;
     }
     
     // Get battery level information for display
@@ -266,10 +314,10 @@ class SwedishTimeFormatter {
             } else if (minutes == 2 && showPlus2) {
                 // if minuteLines[0] ends with ÖVER, change to LITE ÖVER
                 if (over) {
-                    lines.add("MER ÄN");
+                    lines.add("ÖVER");
                 }
                 else {
-                    lines.add("MINDRE ÄN");
+                    lines.add("ÖVER");
                 }
             }
         }        
