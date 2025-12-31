@@ -1,2 +1,3 @@
-Show steps as a progress circle?
-Show time up to 30 seconds before.
+Visa antal steg som en progress-cirkel?
+Uppdatera tiden upp till 30 sekunder tidigare
+Hangouts på tisdagar och torsdagar vid 15:30

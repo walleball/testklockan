@@ -1,0 +1,7 @@
+2.0.0 2025-12-27
+Visar tiden på färre och bredare rader.
+Inställningar för att ändra färg på texten, visa batteristatus och välja hur detaljerad tidsangivelsen ska vara.
+
+2.1.0 2025-12-31
+Bättre flöde av text, visa färre ord per rad om det är få rader
+
