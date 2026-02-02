@@ -16,6 +16,18 @@
         <settingConfig type="boolean" />
     </setting>
     
+    <setting propertyKey="@Properties.EarlierText" title="@Strings.EarlierTextTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.Seconds0</listEntry>
+            <listEntry value="5">@Strings.Seconds5</listEntry>
+            <listEntry value="10">@Strings.Seconds10</listEntry>
+            <listEntry value="15">@Strings.Seconds15</listEntry>
+            <listEntry value="20">@Strings.Seconds20</listEntry>
+            <listEntry value="25">@Strings.Seconds25</listEntry>
+            <listEntry value="30">@Strings.Seconds30</listEntry>
+        </settingConfig>
+    </setting>
+    
     <setting propertyKey="@Properties.ShowMinus2Min" title="@Strings.ShowMinus2MinTitle">
         <settingConfig type="boolean" />
     </setting>

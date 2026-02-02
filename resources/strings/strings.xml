@@ -4,6 +4,7 @@
     <!-- Settings titles -->
     <string id="TextColorTitle">Textfärg</string>
     <string id="ShowBatteryTitle">Batteri</string>
+    <string id="EarlierTextTitle">Tidigare text</string>
     <string id="ShowMinus2MinTitle">SNART (-2 min)</string>
     <string id="ShowMinus1MinTitle">STRAX (-1 min)</string>
     <string id="Show0MinTitle">PRICK/EXAKT</string>
@@ -20,4 +21,13 @@
     <string id="ColorYellow">Gul</string>
     <string id="ColorOrange">Orange</string>
     <string id="ColorPurple">Lila</string>
+    
+    <!-- Earlier text seconds options -->
+    <string id="Seconds0">0s</string>
+    <string id="Seconds5">5s</string>
+    <string id="Seconds10">10s</string>
+    <string id="Seconds15">15s</string>
+    <string id="Seconds20">20s</string>
+    <string id="Seconds25">25s</string>
+    <string id="Seconds30">30s</string>
 </strings>

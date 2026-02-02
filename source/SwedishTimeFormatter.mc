@@ -20,9 +20,20 @@ class SwedishTimeFormatter {
     // Generate Swedish text lines based on time with settings
     static function buildLines(clockTime as System.ClockTime, settings as Lang.Dictionary) as Lang.Array<Lang.String> {
         var now = Time.now();
+        
+        // Apply time offset from EarlierText setting
+        var earlierSecondsValue = settings.get("EarlierText");
+        if (earlierSecondsValue != null) {
+            var earlierSeconds = earlierSecondsValue as Lang.Number;
+            if (earlierSeconds > 0) {
+                var offset = new Time.Duration(-earlierSeconds);
+                now = now.add(offset);
+            }
+        }
+        
         var info = Time.Gregorian.info(now, Time.FORMAT_SHORT);
         
-        var lines = getTimeStrings(clockTime, info, settings);
+        var lines = getTimeStrings(info, settings);
         return adjustLines(lines);
     }
 
@@ -115,7 +126,7 @@ class SwedishTimeFormatter {
         };
     }
     
-    static function getEventStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, showHangout as Lang.Boolean) as Lang.Dictionary {
+    static function getEventStrings(info as Time.Gregorian.Info, showHangout as Lang.Boolean) as Lang.Dictionary {
         var line1 = "";
         var line2 = "";
         var minutes = 0;
@@ -123,8 +134,8 @@ class SwedishTimeFormatter {
         var nYear = info.year;
         var nMonth = info.month;
         var nDay = info.day;
-        var nHour = clockTime.hour;
-        var nMinute = clockTime.min;
+        var nHour = info.hour;
+        var nMinute = info.min;
         var weekDay = info.day_of_week;
         
         // Melodikrysset - 10:00 on saturdays
@@ -186,12 +197,12 @@ class SwedishTimeFormatter {
         };
     }
     
-    static function getHourStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, showHangout as Lang.Boolean) as Lang.Dictionary {
-        var hour = clockTime.hour;
-        var minute = clockTime.min;
+    static function getHourStrings(info as Time.Gregorian.Info, showHangout as Lang.Boolean) as Lang.Dictionary {
+        var hour = info.hour;
+        var minute = info.min;
         var minutes = minute;
         
-        var eventStrings = getEventStrings(clockTime, info, showHangout);
+        var eventStrings = getEventStrings(info, showHangout);
         var eventLines = eventStrings.get("lines") as Lang.Array<Lang.String>;
         if (eventLines.size() > 0) {
             return {
@@ -260,11 +271,11 @@ class SwedishTimeFormatter {
         };
     }
     
-    static function getTimeStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, settings as Lang.Dictionary?) as Lang.Array<Lang.String> {
-        var hour = clockTime.hour;
+    static function getTimeStrings(info as Time.Gregorian.Info, settings as Lang.Dictionary?) as Lang.Array<Lang.String> {
+        var hour = info.hour;
         
         var showHangout = settings == null ? false : (settings.get("ShowHangout") as Lang.Boolean);
-        var hourStrings = getHourStrings(clockTime, info, showHangout);
+        var hourStrings = getHourStrings(info, showHangout);
         var hourLines = hourStrings.get("lines") as Lang.Array<Lang.String>;
         var hourMinutes = hourStrings.get("minutes") as Lang.Number;
         
