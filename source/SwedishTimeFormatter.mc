@@ -26,7 +26,7 @@ class SwedishTimeFormatter {
         if (earlierSecondsValue != null) {
             var earlierSeconds = earlierSecondsValue as Lang.Number;
             if (earlierSeconds > 0) {
-                var offset = new Time.Duration(-earlierSeconds);
+                var offset = new Time.Duration(earlierSeconds);
                 now = now.add(offset);
             }
         }
