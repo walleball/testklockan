@@ -33,6 +33,8 @@ class testklockanView extends WatchUi.WatchFace {
         
         // Read settings
         var settings = {
+            "EarlierText" => getNumberPropertyValue("EarlierText", 30),
+            "ShowHangout" => getPropertyValue("ShowHangout", false),
             "ShowMinus2Min" => getPropertyValue("ShowMinus2Min", true),
             "ShowMinus1Min" => getPropertyValue("ShowMinus1Min", true),
             "Show0Min" => getPropertyValue("Show0Min", true),
@@ -66,6 +68,19 @@ class testklockanView extends WatchUi.WatchFace {
             var value = Application.Properties.getValue(key);
             if (value != null && value instanceof Lang.Boolean) {
                 return value as Lang.Boolean;
+            }
+        } catch (e) {
+            // Property read failed, use default
+        }
+        return defaultValue;
+    }
+    
+    // Helper to get number property value with default
+    function getNumberPropertyValue(key as Lang.String, defaultValue as Lang.Number) as Lang.Number {
+        try {
+            var value = Application.Properties.getValue(key);
+            if (value != null && value instanceof Lang.Number) {
+                return value as Lang.Number;
             }
         } catch (e) {
             // Property read failed, use default
