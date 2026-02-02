@@ -115,7 +115,7 @@ class SwedishTimeFormatter {
         };
     }
     
-    static function getEventStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info) as Lang.Dictionary {
+    static function getEventStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, showHangout as Lang.Boolean) as Lang.Dictionary {
         var line1 = "";
         var line2 = "";
         var minutes = 0;
@@ -141,13 +141,13 @@ class SwedishTimeFormatter {
         }
         
         // Hangouts at 15:30 on tuesday and thursday
-        // if (weekDay == TUESDAY || weekDay == THURSDAY) {
-        //     if (nHour == 15 && nMinute >= 18 && nMinute <= 32) {
-        //         line1 = "HANG";
-        //         line2 = "OUT";
-        //         minutes = nMinute - 30;
-        //     }
-        // }
+        if (showHangout && (weekDay == TUESDAY || weekDay == THURSDAY)) {
+            if (nHour == 15 && nMinute >= 18 && nMinute <= 32) {
+                line1 = "HANG";
+                line2 = "OUT";
+                minutes = nMinute - 30;
+            }
+        }
         
         // Kalle Anka - Christmas Eve
         if (nMonth == DECEMBER && nDay == 24) {
@@ -186,12 +186,12 @@ class SwedishTimeFormatter {
         };
     }
     
-    static function getHourStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info) as Lang.Dictionary {
+    static function getHourStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, showHangout as Lang.Boolean) as Lang.Dictionary {
         var hour = clockTime.hour;
         var minute = clockTime.min;
         var minutes = minute;
         
-        var eventStrings = getEventStrings(clockTime, info);
+        var eventStrings = getEventStrings(clockTime, info, showHangout);
         var eventLines = eventStrings.get("lines") as Lang.Array<Lang.String>;
         if (eventLines.size() > 0) {
             return {
@@ -263,7 +263,8 @@ class SwedishTimeFormatter {
     static function getTimeStrings(clockTime as System.ClockTime, info as Time.Gregorian.Info, settings as Lang.Dictionary?) as Lang.Array<Lang.String> {
         var hour = clockTime.hour;
         
-        var hourStrings = getHourStrings(clockTime, info);
+        var showHangout = settings == null ? false : (settings.get("ShowHangout") as Lang.Boolean);
+        var hourStrings = getHourStrings(clockTime, info, showHangout);
         var hourLines = hourStrings.get("lines") as Lang.Array<Lang.String>;
         var hourMinutes = hourStrings.get("minutes") as Lang.Number;
         

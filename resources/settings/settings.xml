@@ -35,4 +35,8 @@
     <setting propertyKey="@Properties.ShowPlus2Min" title="@Strings.ShowPlus2MinTitle">
         <settingConfig type="boolean" />
     </setting>
+    
+    <setting propertyKey="@Properties.ShowHangout" title="@Strings.ShowHangoutTitle">
+        <settingConfig type="boolean" />
+    </setting>
 </settings>

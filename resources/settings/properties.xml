@@ -6,4 +6,5 @@
     <property id="Show0Min" type="boolean">true</property>
     <property id="ShowPlus1Min" type="boolean">true</property>
     <property id="ShowPlus2Min" type="boolean">true</property>
+    <property id="ShowHangout" type="boolean">false</property>
 </properties>
