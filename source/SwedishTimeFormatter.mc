@@ -58,17 +58,26 @@ class SwedishTimeFormatter {
             }
         }
         
-        // If 4 or fewer words, we're done
-        if (words.size() <= 3) {
+        // If 2 or fewer words, we're done
+        if (words.size() <= 2) {
             return words;
         }
         
-        // Try to reduce line count by merging "I" with previous word
+        // Try to reduce line count by merging "I" with adjacent word
         var result = [] as Lang.Array<Lang.String>;
         for (var i = 0; i < words.size(); i++) {
             if (words[i].equals("I") && result.size() > 0) {
-                // Merge "I" with previous word
-                result[result.size() - 1] = result[result.size() - 1] + " I";
+                var prevWord = result[result.size() - 1];
+                var hasNextWord = (i + 1) < words.size();
+                
+                // If there's a next word and it's shorter than the previous word, merge with next word
+                if (hasNextWord && words[i + 1].length() < prevWord.length()) {
+                    result.add("I " + words[i + 1]);
+                    i++; // Skip next word since we've already added it
+                } else {
+                    // Otherwise, merge "I" with previous word
+                    result[result.size() - 1] = prevWord + " I";
+                }
             } else {
                 result.add(words[i]);
             }
