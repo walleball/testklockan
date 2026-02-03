@@ -1,3 +1,2 @@
 bin/*
-releases/testklockan 2.1.0.iq
-releases/testklockan 2.2.0.iq
+releases/*.iq

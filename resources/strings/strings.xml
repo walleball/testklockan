@@ -4,13 +4,13 @@
     <!-- Settings titles -->
     <string id="TextColorTitle">Textfärg</string>
     <string id="ShowBatteryTitle">Batteri</string>
-    <string id="EarlierTextTitle">Tidigare text</string>
+    <string id="EarlierTextTitle">Uppdatera klocktexten i förtid</string>
     <string id="ShowMinus2MinTitle">SNART (-2 min)</string>
     <string id="ShowMinus1MinTitle">STRAX (-1 min)</string>
     <string id="Show0MinTitle">PRICK/EXAKT</string>
     <string id="ShowPlus1MinTitle">NYSS (+1 min)</string>
     <string id="ShowPlus2MinTitle">ÖVER (+2 min)</string>
-    <string id="ShowHangoutTitle">Visa hangout</string>
+    <string id="ShowHangoutTitle">Hangout 15:30 ti/to</string>
     
     <!-- Color options -->
     <string id="ColorWhite">Vit</string>

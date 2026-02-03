@@ -79,8 +79,25 @@ class testklockanView extends WatchUi.WatchFace {
     function getNumberPropertyValue(key as Lang.String, defaultValue as Lang.Number) as Lang.Number {
         try {
             var value = Application.Properties.getValue(key);
-            if (value != null && value instanceof Lang.Number) {
-                return value as Lang.Number;
+            if (value != null) {
+                if (value instanceof Lang.Number) {
+                    return value as Lang.Number;
+                } else if (value instanceof Lang.Float) {
+                    return (value as Lang.Float).toNumber();
+                } else if (value instanceof Lang.Long) {
+                    return (value as Lang.Long).toNumber();
+                } else if (value instanceof Lang.String) {
+                    // Try to parse string value (in case it's stored as "30" or "30s")
+                    var str = value as Lang.String;
+                    // Remove trailing 's' if present
+                    if (str.length() > 0 && str.substring(str.length() - 1, str.length()).equals("s")) {
+                        str = str.substring(0, str.length() - 1);
+                    }
+                    var parsed = str.toNumber();
+                    if (parsed != null) {
+                        return parsed;
+                    }
+                }
             }
         } catch (e) {
             // Property read failed, use default
