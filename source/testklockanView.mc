@@ -6,9 +6,24 @@ import Toybox.Application;
 using Toybox.WatchUi as Ui;
 
 class testklockanView extends WatchUi.WatchFace {
+    // Cached values for battery optimization
+    private var _cachedSettings as Lang.Dictionary?;
+    private var _cachedFont as Graphics.FontType?;
+    private var _cachedTextColor as Graphics.ColorValue?;
+    private var _cachedLines as Lang.Array<Lang.String>?;
+    private var _batteryUpdateCounter as Lang.Number;
+    private var _cachedBatteryInfo as Lang.Dictionary?;
+    private var _isInLowPowerMode as Lang.Boolean;
 
     function initialize() {
         WatchFace.initialize();
+        _cachedSettings = null;
+        _cachedFont = null;
+        _cachedTextColor = null;
+        _cachedLines = null;
+        _batteryUpdateCounter = 0;
+        _cachedBatteryInfo = null;
+        _isInLowPowerMode = false;
     }
 
     // Load your resources here
@@ -20,6 +35,25 @@ class testklockanView extends WatchUi.WatchFace {
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
     function onShow() as Void {
+        // Reload settings when view is shown (user may have changed them)
+        loadSettings();
+    }
+    
+    // Load and cache settings to avoid reading properties every update
+    function loadSettings() as Void {
+        _cachedSettings = {
+            "EarlierText" => getNumberPropertyValue("EarlierText", 30),
+            "ShowHangout" => getPropertyValue("ShowHangout", false),
+            "ShowMinus2Min" => getPropertyValue("ShowMinus2Min", true),
+            "ShowMinus1Min" => getPropertyValue("ShowMinus1Min", true),
+            "Show0Min" => getPropertyValue("Show0Min", true),
+            "ShowPlus1Min" => getPropertyValue("ShowPlus1Min", true),
+            "ShowPlus2Min" => getPropertyValue("ShowPlus2Min", true)
+        };
+        _cachedTextColor = getTextColor();
+        // Invalidate font cache when settings change
+        _cachedFont = null;
+        _cachedLines = null;
     }
 
     // Update the view
@@ -31,34 +65,53 @@ class testklockanView extends WatchUi.WatchFace {
         // Get current time
         var clockTime = System.getClockTime();
         
-        // Read settings
-        var settings = {
-            "EarlierText" => getNumberPropertyValue("EarlierText", 30),
-            "ShowHangout" => getPropertyValue("ShowHangout", false),
-            "ShowMinus2Min" => getPropertyValue("ShowMinus2Min", true),
-            "ShowMinus1Min" => getPropertyValue("ShowMinus1Min", true),
-            "Show0Min" => getPropertyValue("Show0Min", true),
-            "ShowPlus1Min" => getPropertyValue("ShowPlus1Min", true),
-            "ShowPlus2Min" => getPropertyValue("ShowPlus2Min", true)
-        };
+        // Load settings if not cached
+        if (_cachedSettings == null) {
+            loadSettings();
+        }
         
         // Build text lines based on time and settings
-        var lines = SwedishTimeFormatter.buildLines(clockTime, settings);
+        var lines = SwedishTimeFormatter.buildLines(clockTime, _cachedSettings);
         
-        // Choose the best font size
-        var font = chooseFontSize(dc, lines);
+        // In low power mode, skip expensive comparison checks and use cached values
+        if (!_isInLowPowerMode) {
+            // Check if lines changed (to recalculate font only when needed)
+            var linesChanged = false;
+            if (_cachedLines == null || _cachedLines.size() != lines.size()) {
+                linesChanged = true;
+            } else {
+                for (var i = 0; i < lines.size(); i++) {
+                    if (!_cachedLines[i].equals(lines[i])) {
+                        linesChanged = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Choose font size only if lines changed or font not cached
+            if (linesChanged || _cachedFont == null) {
+                _cachedFont = chooseFontSize(dc, lines);
+                _cachedLines = lines;
+            }
+        } else if (_cachedFont == null) {
+            // First time in low power mode - need to initialize font
+            _cachedFont = chooseFontSize(dc, lines);
+            _cachedLines = lines;
+        }
         
-        // Get text color from settings
-        var textColor = getTextColor();
+        // Draw the lines centered on screen using cached values
+        dc.setColor(_cachedTextColor, Graphics.COLOR_TRANSPARENT);
+        drawCenteredLines(dc, lines, _cachedFont);
         
-        // Draw the lines centered on screen
-        dc.setColor(textColor, Graphics.COLOR_TRANSPARENT);
-        drawCenteredLines(dc, lines, font);
-        
-        // Draw battery indicator if enabled
+        // Draw battery indicator if enabled (update every 5 minutes to save battery)
         var showBattery = getPropertyValue("ShowBattery", false);
         if (showBattery) {
-            drawBatteryIndicator(dc);
+            _batteryUpdateCounter++;
+            if (_batteryUpdateCounter >= 5 || _cachedBatteryInfo == null) {
+                _cachedBatteryInfo = SwedishTimeFormatter.getBatteryInfo();
+                _batteryUpdateCounter = 0;
+            }
+            drawBatteryIndicator(dc, _cachedBatteryInfo);
         }
     }
     
@@ -164,15 +217,19 @@ class testklockanView extends WatchUi.WatchFace {
 
     // The user has just looked at their watch. Timers and animations may be started here.
     function onExitSleep() as Void {
+        _isInLowPowerMode = false;
+        // Refresh cached values when user looks at watch
+        _cachedBatteryInfo = null;
     }
 
     // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() as Void {
+        _isInLowPowerMode = true;
+        // In low power mode, we can skip some expensive operations
     }
 
     // Draw battery level indicator at bottom center
-    function drawBatteryIndicator(dc as Graphics.Dc) as Void {
-        var batteryInfo = SwedishTimeFormatter.getBatteryInfo();
+    function drawBatteryIndicator(dc as Graphics.Dc, batteryInfo as Lang.Dictionary) as Void {
         var color = batteryInfo.get("color") as Graphics.ColorType;
         var percentage = batteryInfo.get("percentage") as Lang.Float;
         

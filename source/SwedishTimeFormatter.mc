@@ -40,21 +40,24 @@ class SwedishTimeFormatter {
     // Helper function to split string by spaces
     static function splitBySpace(str as Lang.String) as Lang.Array<Lang.String> {
         var result = [] as Lang.Array<Lang.String>;
-        var word = "";
-        for (var i = 0; i < str.length(); i++) {
+        var startIdx = 0;
+        var len = str.length();
+        
+        for (var i = 0; i < len; i++) {
             var c = str.substring(i, i + 1);
             if (c.equals(" ")) {
-                if (word.length() > 0) {
-                    result.add(word);
-                    word = "";
+                if (i > startIdx) {
+                    result.add(str.substring(startIdx, i));
                 }
-            } else {
-                word += c;
+                startIdx = i + 1;
             }
         }
-        if (word.length() > 0) {
-            result.add(word);
+        
+        // Add last word if exists
+        if (startIdx < len) {
+            result.add(str.substring(startIdx, len));
         }
+        
         return result;
     }
 
