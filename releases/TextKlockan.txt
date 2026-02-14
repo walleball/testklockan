@@ -8,3 +8,5 @@ Bättre flöde av text, visa färre ord per rad om det är få rader
 2.2.0 2026-02-02
 Inställningar för att uppdatera klocktexten i förtid
 
+next
+Batterioptimeringar

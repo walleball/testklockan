@@ -162,6 +162,13 @@ class SwedishTimeFormatter {
                 minutes = nMinute - 30;
             }
         }
+        // Breakfast hangouts at 08:45 on thursday
+        if (showHangout && weekDay == THURSDAY) {
+            if (nHour == 8 && nMinute >= 28 && nMinute <= 47) {
+                line1 = "FRUKOST";
+                minutes = nMinute - 45;
+            }
+        }
         
         // Kalle Anka - Christmas Eve
         if (nMonth == DECEMBER && nDay == 24) {
