@@ -327,16 +327,23 @@ class SwedishTimeFormatter {
                 lines.add("LITE ÖVER");
             }
         } else {
-            var over = false;
+            var has_over = false;
             if (minuteLines.size() == 1 && minuteLines[0].length() >= 4 && 
                 minuteLines[0].substring(minuteLines[0].length() - 5, minuteLines[0].length()).equals(" ÖVER")) {
-                over = true;
+                has_over = true;
             } else if (minuteLines.size() > 1 && minuteLines[minuteLines.size() - 1].equals("ÖVER")) {
-                over = true;
+                has_over = true;
+            }
+            var has_i = false;
+            if (minuteLines.size() == 1 && minuteLines[0].length() >= 1 && 
+                minuteLines[0].substring(minuteLines[0].length() - 2, minuteLines[0].length()).equals(" I")) {
+                has_i = true;
+            } else if (minuteLines.size() > 1 && minuteLines[minuteLines.size() - 1].equals("I")) {
+                has_i = true;
             }
 
             if (minutes == 1 && showPlus1) {
-                if (over) {
+                if (has_over) {
                     lines.add("NYSS");
                 }
                 else {
@@ -344,8 +351,11 @@ class SwedishTimeFormatter {
                 }
             } else if (minutes == 2 && showPlus2) {
                 // if minuteLines[0] ends with ÖVER, change to LITE ÖVER
-                if (over) {
-                    lines.add("ÖVER");
+                if (has_over) {
+                    lines.add("MER ÄN");
+                }
+                else if (has_i) {
+                    lines.add("MINDRE ÄN");
                 }
                 else {
                     lines.add("ÖVER");
