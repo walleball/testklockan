@@ -10,3 +10,6 @@ Inställningar för att uppdatera klocktexten i förtid
 
 2.3.0 2026-02-14
 Batterioptimeringar
+
+2.3.1 2026-08-09
+Använd "mer än" och "mindre än" istället för "över" på vissa tidsangivelser
